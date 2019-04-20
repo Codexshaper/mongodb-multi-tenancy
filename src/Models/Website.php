@@ -10,7 +10,7 @@ use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
 class Website extends Eloquent
 {
-   public function createWebsite( $website )
+   public function createWebsite( $website, $command='migrate' )
    {
    		DB::purge('mongodb');
    		// Make sure to use the database name we want to establish a connection.
@@ -23,14 +23,14 @@ class Website extends Eloquent
    		  
    		Schema::connection('mongodb')->getConnection()->reconnect();
 
-   		Artisan::call('migrate', [
-   		    '--path' => 'database/migrations/tenant',
+   		Artisan::call($command, [
+   		    '--path' => config('tenancy.db.tenant_migrations_path'),
    		    '--force'     => true,
    		]);
    }
 
-   public static function migrate( $website )
+   public function migrate( $website, $command='migrate' )
    {
-   		$this->createWebsite( $website );
+   		$this->createWebsite( $website, $command );
    }
 }

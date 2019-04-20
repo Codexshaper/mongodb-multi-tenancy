@@ -2,12 +2,13 @@
 
 namespace Codexshaper\Tenancy;
 
-use Codexshaper\Tenancy\WooCommerceApi;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Contracts\Http\Kernel;
 use Codexshaper\Tenancy\Commands\CreateTenant;
 use Codexshaper\Tenancy\Commands\DeleteTenant;
+use Codexshaper\Tenancy\Commands\MigrateRefreshTenant;
 use Codexshaper\Tenancy\Commands\MigrateTenant;
+use Codexshaper\Tenancy\WooCommerceApi;
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\ServiceProvider;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -58,6 +59,7 @@ class TenancyServiceProvider extends ServiceProvider
             CreateTenant::class,
             DeleteTenant::class,
             MigrateTenant::class,
+            MigrateRefreshTenant::class,
         ]);
     }
 

@@ -9,9 +9,9 @@ use Codexshaper\Tenancy\Models\Website;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 
-class MigrateTenant extends Command
+class MigrateRefreshTenant extends Command
 {
-    protected $signature = 'tenant:migrate';
+    protected $signature = 'tenant:migrate:refresh';
     protected $description = 'Deletes a tenant of the provided website. Only available on the local environment e.g. php artisan tenant:delete dev_test';
 
     public function handle()
@@ -33,7 +33,7 @@ class MigrateTenant extends Command
 
         if( $websites ){
             foreach ($websites as $website) {
-               $website->migrate( $website->name );
+               $website->migrate( $website->name, 'migrate:refresh' );
             }
             
         } 

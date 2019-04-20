@@ -19,6 +19,6 @@ return [
 
         'system_db' => env('TENANT_SYSTEM_DATABASE', 'mongodb'),
 
-        'tenant_migrations_path' => database_path('migrations/tenant'),
+        'tenant_migrations_path' => 'database/migrations/tenant',
     ],
 ];
