@@ -38,6 +38,10 @@ class TenancyServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'../../assets/config/tenancy.php' => config_path('tenancy.php'),
         ],'tenancy');
+        $this->publishes(
+            [__DIR__ . '/../../assets/migrations' => database_path('migrations')],
+            'tenancy'
+        );
 
         // $this->app->singleton('WooCommerceApi', function(){
         //     return new WooCommerceApi(); 
