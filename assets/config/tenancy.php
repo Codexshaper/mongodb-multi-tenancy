@@ -11,10 +11,14 @@ return [
   
     ],
     'hostname' => [
+
+        'system_hostname' => env('TENANT_SYSTEM_HOSTNAME', 'example.com'),
         
     ],
     'db' => [
 
-        'tenant-migrations-path' => database_path('migrations/tenant'),
+        'system_db' => env('TENANT_SYSTEM_DATABASE', 'mongodb'),
+
+        'tenant_migrations_path' => database_path('migrations/tenant'),
     ],
 ];

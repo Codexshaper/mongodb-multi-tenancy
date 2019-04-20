@@ -16,25 +16,41 @@ class Hostname extends Eloquent
     	return $this->belongsTo(Website::class);
     }
 
+    public static function switch( $website )
+    {
+        DB::purge('mongodb');
+        Config::set('database.connections.mongodb.database', $website);
+        if( DB::reconnect() ) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static function identifyHostname( Request $request )
     {
     	$current_hostname = $request->getHost();
         $hostnames = Hostname::all();
 
-        foreach ($hostnames as $hostname) {
-            if ( $hostname->fqdn == $current_hostname ) {
+        $system_hostname = config('tenancy.hostname.system_hostname');
+        $system_db = config('tenancy.db.system_db');
 
-                $website = $hostname->website;
+        if( $system_hostname ==  $current_hostname ) {
+            
+            return self::switch( $system_db );
+        }else {
+            foreach ($hostnames as $hostname) {
+                if ( $hostname->fqdn == $current_hostname ) {
 
-                if( $website ) {
-                    $database = $website->name;
+                    $website = $hostname->website;
 
-                    DB::purge('mongodb');
-                    Config::set('database.connections.mongodb.database', $database);
-                    DB::reconnect();
-                    return true;
+                    if( $website ) {
+                        $database = $website->name;
+
+                        return self::switch( $database );
+                    }
+                    
                 }
-                
             }
         }
 
