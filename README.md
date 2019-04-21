@@ -21,4 +21,4 @@ tenant:delete {host}
 tenant:migrate
 tenant:migrate:refresh
 ```
-Example: php artisan tenant:create dev dev.codexshaper.com
+Example: ```php artisan tenant:create dev dev.codexshaper.com```
