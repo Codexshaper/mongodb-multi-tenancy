@@ -12,6 +12,6 @@ class TenancyConnectionFacade extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'Codexshaper\Tenancy\TenancyConnection';
+        return 'TenancyConnection';
     }
 }

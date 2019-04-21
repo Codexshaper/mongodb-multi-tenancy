@@ -31,11 +31,15 @@ class DeleteTenant extends Command
     {
 
         if ($hostname = Hostname::where('fqdn', $host)->firstOrFail()) {
+            $host_name = $hostname->fqdn;
             $website = $hostname->website;
             $db_name = $website->name;
-            var_dump( $website->name );
-            die();
-            $this->info("Tenant {$uuid} successfully deleted.");
+
+            if( $website->deleteWebsite( $db_name ) ) {
+                $website->delete();
+                $hostname->delete();
+                $this->info("Tenant {$host_name} successfully deleted.");
+            }
         }
     }
 }

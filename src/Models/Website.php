@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
+use TenancyConnection;
 
 class Website extends Eloquent
 {
@@ -24,6 +25,15 @@ class Website extends Eloquent
    		    '--path' => config('tenancy.db.tenant_migrations_path'),
    		    '--force'     => true,
    		]);
+   }
+
+   public function deleteWebsite( $db )
+   {
+        $connection = TenancyConnection::getConenection();
+        if( $connection->dropDatabase( $db ) ) {
+         return true;
+        }
+      return false;
    }
 
    public function migrate( $website, $command='migrate' )

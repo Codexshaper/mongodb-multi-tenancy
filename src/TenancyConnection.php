@@ -4,7 +4,7 @@ namespace Codexshaper\Tenancy;
 use MongoDB\Client;
 class TenancyConnection
 {
-	public $mongo_connection;
+	protected $connection;
 
     public function __construct() {
     	$host       = config('database.connections.mongodb.host');
@@ -17,11 +17,11 @@ class TenancyConnection
     	    $dsn = 'mongodb://'. $host . ':' . $port . ($auth_db ? "/" . $auth_db : '');
     	}
     	
-    	$this->mongo_connection = new Client( $dsn );
+    	$this->connection = new Client( $dsn );
     }
 
     public function getConenection()
     {
-        return $this->mongo_connection;
+        return $this->connection;
     }
 }

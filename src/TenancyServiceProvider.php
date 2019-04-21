@@ -48,7 +48,7 @@ class TenancyServiceProvider extends ServiceProvider
         $this->app->singleton('TenancyConnection', function(){
             return new TenancyConnection(); 
         });
-        // $this->app->alias('Codexshaper\Tenancy\TenancyConnection', 'TenancyConnection');
+        $this->app->alias('Codexshaper\Tenancy\TenancyConnection', 'TenancyConnection');
 
         $this->registerMiddleware();
     }
