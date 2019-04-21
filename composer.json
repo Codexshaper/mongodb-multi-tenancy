@@ -24,7 +24,7 @@
                 "Codexshaper\\Tenancy\\TenancyServiceProvider"
             ],
             "aliases": {
-                "Tenancy": "Codexshaper\\Tenancy\\Facades\\Tenancy"
+                "TenancyConnection": "Codexshaper\\Tenancy\\Facades\\TenancyConnectionFacade"
             }
         }
     }

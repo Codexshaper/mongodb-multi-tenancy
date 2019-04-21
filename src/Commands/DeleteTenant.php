@@ -2,16 +2,15 @@
 
 namespace Codexshaper\Tenancy\Commands;
 
-use Hyn\Tenancy\Contracts\Repositories\HostnameRepository;
-use Hyn\Tenancy\Contracts\Repositories\WebsiteRepository;
 use Hyn\Tenancy\Environment;
-use Hyn\Tenancy\Models\Website;
+use Codexshaper\Tenancy\Models\Website;
+use Codexshaper\Tenancy\Models\Hostname;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 
 class DeleteTenant extends Command
 {
-    protected $signature = 'tenant:delete {website}';
+    protected $signature = 'tenant:delete {host}';
     protected $description = 'Deletes a tenant of the provided website. Only available on the local environment e.g. php artisan tenant:delete dev_test';
 
     public function handle()
@@ -24,16 +23,18 @@ class DeleteTenant extends Command
             return;
         }
 
-        $website = $this->argument('website');
-        $this->deleteTenant($website);
+        $host = $this->argument('host');
+        $this->deleteTenant($host);
     }
 
-    private function deleteTenant($uuid)
+    private function deleteTenant($host)
     {
-        if ($website = Website::where('uuid', $uuid)->with(['hostnames'])->firstOrFail()) {
-            $hostname = $website->hostnames->first();
-            app(HostnameRepository::class)->delete($hostname, true);
-            app(WebsiteRepository::class)->delete($website, true);
+
+        if ($hostname = Hostname::where('fqdn', $host)->firstOrFail()) {
+            $website = $hostname->website;
+            $db_name = $website->name;
+            var_dump( $website->name );
+            die();
             $this->info("Tenant {$uuid} successfully deleted.");
         }
     }

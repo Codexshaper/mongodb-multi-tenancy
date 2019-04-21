@@ -1,10 +1,10 @@
 <?php
 
-namespace Codexshaper\Tenancy\Traits;
+namespace Codexshaper\Tenancy;
 use MongoDB\Client;
-trait TenancyTrait
+class TenancyConnection
 {
-	protected $mongo_connection;
+	public $mongo_connection;
 
     public function __construct() {
     	$host       = config('database.connections.mongodb.host');
@@ -18,5 +18,10 @@ trait TenancyTrait
     	}
     	
     	$this->mongo_connection = new Client( $dsn );
+    }
+
+    public function getConenection()
+    {
+        return $this->mongo_connection;
     }
 }

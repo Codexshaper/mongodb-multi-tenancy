@@ -3,14 +3,18 @@
 namespace Codexshaper\Tenancy\Models;
 
 use Codexshaper\Tenancy\Models\Website;
+use Codexshaper\Tenancy\Traits\TenancyConnectionTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
+use TenancyConnection;
+
 class Hostname extends Eloquent
 {
+
     public function website()
     {
     	return $this->belongsTo(Website::class);
@@ -18,10 +22,17 @@ class Hostname extends Eloquent
 
     public static function switch( $website )
     {
-        DB::purge('mongodb');
-        Config::set('database.connections.mongodb.database', $website);
-        if( DB::reconnect() ) {
-            return true;
+        $mongoDatabases = TenancyConnection::getConenection()->listDatabases();
+
+        foreach ($mongoDatabases as $mongoDatabase) {
+            
+            if ( $mongoDatabase['name'] == $website ) {
+                DB::purge('mongodb');
+                Config::set('database.connections.mongodb.database', $website);
+                if( DB::reconnect('mongodb') ) {
+                    return true;
+                }
+            }
         }
 
         return false;

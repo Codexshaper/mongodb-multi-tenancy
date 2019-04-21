@@ -6,7 +6,7 @@ use Codexshaper\Tenancy\Commands\CreateTenant;
 use Codexshaper\Tenancy\Commands\DeleteTenant;
 use Codexshaper\Tenancy\Commands\MigrateRefreshTenant;
 use Codexshaper\Tenancy\Commands\MigrateTenant;
-use Codexshaper\Tenancy\WooCommerceApi;
+use Codexshaper\Tenancy\TenancyConnection;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
 
@@ -45,10 +45,10 @@ class TenancyServiceProvider extends ServiceProvider
             'tenancy'
         );
 
-        // $this->app->singleton('WooCommerceApi', function(){
-        //     return new WooCommerceApi(); 
-        // });
-        // $this->app->alias('Codexshaper\Woocommerce\WooCommerceApi', 'WoocommerceApi');
+        $this->app->singleton('TenancyConnection', function(){
+            return new TenancyConnection(); 
+        });
+        // $this->app->alias('Codexshaper\Tenancy\TenancyConnection', 'TenancyConnection');
 
         $this->registerMiddleware();
     }

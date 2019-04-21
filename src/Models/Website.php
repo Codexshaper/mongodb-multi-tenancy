@@ -13,11 +13,8 @@ class Website extends Eloquent
    public function createWebsite( $website, $command='migrate' )
    {
    		DB::purge('mongodb');
-   		// Make sure to use the database name we want to establish a connection.
-   		Config::set('database.connections.mongodb.host', env('DB_HOST', 'localhost'));
+         
    		Config::set('database.connections.mongodb.database', $website);
-   		Config::set('database.connections.mongodb.username', env('DB_USERNAME', ''));
-   		Config::set('database.connections.mongodb.password', env('DB_PASSWORD', ''));
    		  
    		DB::reconnect('mongodb');
    		  
