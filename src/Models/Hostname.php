@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
-
 use TenancyConnection;
 
 class Hostname extends Eloquent
@@ -27,11 +27,71 @@ class Hostname extends Eloquent
         foreach ($mongoDatabases as $mongoDatabase) {
             
             if ( $mongoDatabase['name'] == $website ) {
-                DB::purge('mongodb');
-                Config::set('database.connections.mongodb.database', $website);
-                if( DB::reconnect('mongodb') ) {
-                    return true;
-                }
+                // Erase the tenant connection, thus making Laravel get the default values all over again.
+                DB::purge('tenant');
+                // Make sure to use the database name we want to establish a connection.
+                Config::set('database.connections.tenant.host', 'localhost');
+                Config::set('database.connections.tenant.database', $website);
+                Config::set('database.connections.tenant.username', env('DB_USERNAME'));
+                Config::set('database.connections.tenant.password', env('DB_PASSWORD'));
+                // Rearrange the connection data
+                DB::reconnect('tenant');
+                // Ping the database. This will throw an exception in case the database does not exists.
+                Schema::connection('tenant')->getConnection()->reconnect();
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function switchTenant( $website, $connection = 'tenant' )
+    {
+        $mongoDatabases = TenancyConnection::getConenection()->listDatabases();
+
+        foreach ($mongoDatabases as $mongoDatabase) {
+            
+            if ( $mongoDatabase['name'] == $website ) {
+                // Erase the tenant connection, thus making Laravel get the default values all over again.
+                DB::purge($connection);
+                // Make sure to use the database name we want to establish a connection.
+                Config::set("database.connections.{$connection}.host", 'localhost');
+                Config::set("database.connections.{$connection}.database", $website);
+                Config::set("database.connections.{$connection}.username", env('DB_USERNAME'));
+                Config::set("database.connections.{$connection}.password", env('DB_PASSWORD'));
+                // Rearrange the connection data
+                DB::reconnect($connection);
+                // Ping the database. This will throw an exception in case the database does not exists.
+                Schema::connection($connection)->getConnection()->reconnect();
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function switchSystem( $website, $connection = 'tenant' )
+    {
+        $mongoDatabases = TenancyConnection::getConenection()->listDatabases();
+
+        foreach ($mongoDatabases as $mongoDatabase) {
+            
+            if ( $mongoDatabase['name'] == $website ) {
+                // Erase the tenant connection, thus making Laravel get the default values all over again.
+                DB::purge($connection);
+                // Make sure to use the database name we want to establish a connection.
+                Config::set("database.connections.{$connection}.host", 'localhost');
+                Config::set("database.connections.{$connection}.database", $website);
+                Config::set("database.connections.{$connection}.username", env('DB_USERNAME'));
+                Config::set("database.connections.{$connection}.password", env('DB_PASSWORD'));
+                // Rearrange the connection data
+                DB::reconnect($connection);
+                // Ping the database. This will throw an exception in case the database does not exists.
+                Schema::connection($connection)->getConnection()->reconnect();
+
+                return true;
             }
         }
 

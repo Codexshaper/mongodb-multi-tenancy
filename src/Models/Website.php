@@ -13,18 +13,23 @@ class Website extends Eloquent
 {
    public function createWebsite( $website, $command='migrate' )
    {
-   		DB::purge('mongodb');
+   		DB::purge('tenant');
          
-   		Config::set('database.connections.mongodb.database', $website);
+   		Config::set('database.connections.tenant.database', $website);
    		  
-   		DB::reconnect('mongodb');
+   		DB::reconnect('tenant');
    		  
-   		Schema::connection('mongodb')->getConnection()->reconnect();
+   		Schema::connection('tenant')->getConnection()->reconnect();
 
    		Artisan::call($command, [
+          '--database' => 'tenant',
    		    '--path' => config('tenancy.db.tenant_migrations_path'),
    		    '--force'     => true,
    		]);
+
+      Artisan::call("db:seed", [
+         '--database' => 'tenant',
+      ]);
    }
 
    public function deleteWebsite( $db )
