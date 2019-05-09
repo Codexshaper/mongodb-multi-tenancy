@@ -56,7 +56,7 @@ class Hostname extends Eloquent
                 // Erase the tenant connection, thus making Laravel get the default values all over again.
                 DB::purge($connection);
                 // Make sure to use the database name we want to establish a connection.
-                Config::set("database.connections.{$connection}.host", 'localhost');
+                Config::set("database.connections.{$connection}.host", env('DB_HOST', 'localhost'));
                 Config::set("database.connections.{$connection}.database", $website);
                 Config::set("database.connections.{$connection}.username", env('DB_USERNAME'));
                 Config::set("database.connections.{$connection}.password", env('DB_PASSWORD'));
@@ -82,7 +82,7 @@ class Hostname extends Eloquent
                 // Erase the tenant connection, thus making Laravel get the default values all over again.
                 DB::purge($connection);
                 // Make sure to use the database name we want to establish a connection.
-                Config::set("database.connections.{$connection}.host", 'localhost');
+                Config::set("database.connections.{$connection}.host", env('DB_HOST', 'localhost'));
                 Config::set("database.connections.{$connection}.database", $website);
                 Config::set("database.connections.{$connection}.username", env('DB_USERNAME'));
                 Config::set("database.connections.{$connection}.password", env('DB_PASSWORD'));

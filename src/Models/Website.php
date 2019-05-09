@@ -29,6 +29,7 @@ class Website extends Eloquent
 
       Artisan::call("db:seed", [
          '--database' => 'tenant',
+         '--force'     => true,
       ]);
    }
 
